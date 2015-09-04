@@ -7,19 +7,31 @@ import javax.json.JsonArray;
 
 import client.ThymioConnector;
 
+import javax.swing.*;
+
 public class ThymioInterface {
 
 	private static final int FREI = 0;
 
 	private ActionListener ae;
 	private ThymioConnector myConnector;
+	private PanelFrame window;
 
 	public ThymioInterface() {
 		initComponents();
+		initWindow();
+	}
+	
+	private void initWindow(){
+		window = new PanelFrame(this);
+		window.setTitle("ThymioGUI");
+		window.setSize(1200, 800);
+		window.setVisible(true);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void initComponents() {
-		myConnector = new ThymioConnector(this);
+		//myConnector = new ThymioConnector(this);
 	}
 
 	public void thymioEvent(JsonArray data) {
@@ -58,23 +70,29 @@ public class ThymioInterface {
 	}
 
 	protected void performAction(ActionEvent e) {
-		// if (e.getSource() == this.fwButton) {
-		// System.out.println("FORWARD!");
-		// myConnector.sendMessage("set speed 50 50");
-		// } else if (e.getSource() == this.bwButton) {
-		// System.out.println("BACKWARD!");
-		// myConnector.sendMessage("set speed -50 -50");
-		// } else if (e.getSource() == this.leftButton) {
-		// System.out.println("LEFT!");
-		// myConnector.sendMessage("set speed -50 50");
-		// } else if (e.getSource() == this.rightButton) {
-		// System.out.println("RIGHT!");
-		// myConnector.sendMessage("set speed 50 -50");
-		// } else if (e.getSource() == this.stopButton) {
-		// System.out.println("STOP!");
-		// myConnector.sendMessage("set speed 0 0");
-		// } else
-		// return;
+		 if (e.getSource() == window.getFwButton()) {
+			 window.appendLine("FORWARD!");
+			 //myConnector.sendMessage("set speed 50 50");
+		 } 
+		 else if (e.getSource() == window.getBwButton()) {
+			 window.appendLine("BACKWARD!");
+			 //myConnector.sendMessage("set speed -50 -50");
+		 } 
+		 else if (e.getSource() == window.getLeftButton()) {
+			 window.appendLine("LEFT!");
+			 //myConnector.sendMessage("set speed -50 50");
+		 } 
+		 else if (e.getSource() == window.getRightButton()) {
+			 window.appendLine("RIGHT!");
+			 //myConnector.sendMessage("set speed 50 -50");
+		 } 
+		 else if (e.getSource() == window.getStopButton()) {
+			 window.appendLine("STOP!");
+			 //myConnector.sendMessage("set speed 0 0");
+		 } 
+		 else {
+			 return;
+		 }
 	}
 
 	private void updatePosition(double posXmm, double posYmm) {
