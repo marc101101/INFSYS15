@@ -6,20 +6,25 @@ import java.awt.event.ActionListener;
 import javax.json.JsonArray;
 
 import client.ThymioConnector;
+import dataanalysis.InfraRed;
+import map.Map;
 
 import javax.swing.*;
 
 public class ThymioInterface {
 
 	private static final int FREI = 0;
-
-	private ActionListener ae;
+	
+	//private ActionListener ae;
 	private ThymioConnector myConnector;
 	private PanelFrame window;
+	private InfraRed myIRData; 
+	private Map m;
+	private MapPanel mp;
 
 	public ThymioInterface() {
-		initComponents();
 		initWindow();
+		initComponents();
 	}
 	
 	private void initWindow(){
@@ -32,6 +37,10 @@ public class ThymioInterface {
 
 	private void initComponents() {
 		//myConnector = new ThymioConnector(this);
+		myIRData = new InfraRed();
+		m = new Map(15, 15, 1);
+		mp = new MapPanel(m, myIRData, window);
+		window.setMap(mp);
 	}
 
 	public void thymioEvent(JsonArray data) {
@@ -63,7 +72,7 @@ public class ThymioInterface {
 					Double.parseDouble(position.getJsonObject(1).getString(
 							"pos_y")));
 			updateObstacle(bestClass);
-			// window.repaint();
+			//window.repaint();
 		} else {
 			System.out.println("ERROR: " + status);
 		}
@@ -96,6 +105,7 @@ public class ThymioInterface {
 	}
 
 	private void updatePosition(double posXmm, double posYmm) {
+		//myMapDisplay.setPose(posXmm/10, posYmm/10, theta);
 	}
 
 	private void updateObstacle(int obstClass) {
