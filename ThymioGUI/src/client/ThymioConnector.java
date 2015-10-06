@@ -37,7 +37,6 @@ public class ThymioConnector {
 			toThymio = new DataOutputStream(clientSocket.getOutputStream());
 			fromThymio = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -49,7 +48,6 @@ public class ThymioConnector {
 		try {
 			clientSocket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
