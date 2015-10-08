@@ -14,12 +14,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-@SuppressWarnings("serial")
+
 public class PanelFrame extends JFrame implements ActionListener {
+	private static final long serialVersionUID = 1L;
 	private ThymioInterface iface;
 	private Container pane;
 	private JTextArea console;
-	private JPanel map, controlbar, buttons;
+	private JPanel controlbar, buttons;
+	private MapPanel map;
 	private JButton fwButton, bwButton, leftButton, rightButton, stopButton;
 	
 	public PanelFrame(ThymioInterface iface){
