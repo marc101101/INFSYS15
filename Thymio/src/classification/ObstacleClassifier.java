@@ -24,7 +24,7 @@ public class ObstacleClassifier extends NaiveBayes { // NaiveBayes
 
 	private void init(String fileName) {
 		try {
-			Instances trainingData = DataSource.read(fileName);
+			Instances trainingData = DataSource.read(fileName); //Trainingsdaten initialisiert
 			if (trainingData.classIndex() == -1)
 				trainingData.setClassIndex(0);
 			this.buildClassifier(trainingData);

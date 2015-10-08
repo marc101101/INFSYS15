@@ -96,7 +96,7 @@ public class DataCalc {
 
 		return v1; 
 
-	}
+	}						
 
 	private double calculateAngle(Double[] v1) {
 		Double[] v_unit = { 0.0, 1.0 };
