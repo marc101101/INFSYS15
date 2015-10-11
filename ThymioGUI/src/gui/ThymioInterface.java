@@ -34,10 +34,6 @@ public class ThymioInterface {
 
 	private void initComponents() {
 		myConnector = new ThymioConnector(this);
-<<<<<<< HEAD
-		myIRData = new InfraRed();
-=======
->>>>>>> 0f5c99b15085c9aeb326bb1d80bb30a70a2df4a1
 		m = new Map(15, 15, 1);
 		mp = new MapPanel(m, new InfraRed(), window);
 		window.setMap(mp);
