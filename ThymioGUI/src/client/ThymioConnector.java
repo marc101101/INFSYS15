@@ -26,7 +26,7 @@ public class ThymioConnector {
 	private ThymioReadThread myReadThread;
 	
 	public ThymioConnector(ThymioInterface mi) {
-		init(mi);
+		//init(mi);
 	}
 	
 	public void init(ThymioInterface mi) {
@@ -57,7 +57,6 @@ public class ThymioConnector {
 			toThymio.writeBytes(input + "\n");
 			toThymio.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}

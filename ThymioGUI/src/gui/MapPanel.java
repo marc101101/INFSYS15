@@ -11,9 +11,7 @@ import dataanalysis.InfraRed;
 import map.Map;
 
 public class MapPanel extends JPanel {
-	/**
-	* 
-	*/
+	
 	private static final long serialVersionUID = 1L;
 	private Map myMap;
 	public static final int LENGTHSCALE = 40;
@@ -56,9 +54,9 @@ public class MapPanel extends JPanel {
 
 		dx = (myMap.getPosX() + 5.5 * Math.cos(angle)) / lengthX * LENGTHSCALE;
 		dy = this.getHeight() - (myMap.getPosY() + 5.5 * Math.sin(angle)) / lengthX * LENGTHSCALE;
-		// g.fillRect((int)(myMap.getPosX()/lengthX*LENGTHSCALE),
-		// this.getHeight() - 5 - (int)(myMap.getPosY()/lengthX*LENGTHSCALE), 5,
-		// 5);
+		 //g.fillRect((int)(myMap.getPosX()/lengthX*LENGTHSCALE),
+		 //this.getHeight() - 5 - (int)(myMap.getPosY()/lengthX*LENGTHSCALE), 5,
+		 //5);
 
 		g.setColor(Color.BLUE);
 

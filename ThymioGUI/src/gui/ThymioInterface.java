@@ -1,7 +1,6 @@
 package gui;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.json.JsonArray;
 
@@ -15,10 +14,8 @@ public class ThymioInterface {
 
 	private static final int FREI = 0;
 	
-	//private ActionListener ae;
 	private ThymioConnector myConnector;
 	private PanelFrame window;
-	private InfraRed myIRData; 
 	private Map m;
 	private MapPanel mp;
 
@@ -30,16 +27,19 @@ public class ThymioInterface {
 	private void initWindow(){
 		window = new PanelFrame(this);
 		window.setTitle("ThymioGUI");
-		window.setSize(1200, 800);
+		window.setSize(800, 800);
 		window.setVisible(true);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void initComponents() {
 		myConnector = new ThymioConnector(this);
+<<<<<<< HEAD
 		myIRData = new InfraRed();
+=======
+>>>>>>> 0f5c99b15085c9aeb326bb1d80bb30a70a2df4a1
 		m = new Map(15, 15, 1);
-		mp = new MapPanel(m, myIRData, window);
+		mp = new MapPanel(m, new InfraRed(), window);
 		window.setMap(mp);
 	}
 
@@ -106,6 +106,7 @@ public class ThymioInterface {
 
 	private void updatePosition(double posXmm, double posYmm) {
 		//myMapDisplay.setPose(posXmm/10, posYmm/10, theta);
+		mp.setPose(posXmm/10, posYmm/10, m.getThymioOrientation());
 	}
 
 	private void updateObstacle(int obstClass) {

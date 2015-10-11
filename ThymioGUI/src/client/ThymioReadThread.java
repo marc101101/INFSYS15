@@ -46,6 +46,8 @@ public class ThymioReadThread extends Thread {
 					data = result.getJsonArray("result");
 					if (data != null) {
 						System.out.println(data);
+						//TODO ?
+						//myInterface.thymioEvent(data);
 					}
 					else {
 						data = result.getJsonArray("values");
@@ -55,7 +57,6 @@ public class ThymioReadThread extends Thread {
 				}
 				else stopped = true;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
 		}
