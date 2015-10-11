@@ -18,7 +18,11 @@ public class PosDetermination {
 		setRules();
 	}
 
-	private void setRules() { //ERSTELLT ALLE MÖGLICHEN KOMBINATIONEN AUS REGELN UND BEFEHLEN 6 x 6 x 5 (evtl STOP raus)
+	/**
+	 * 	Erstellt alle möglichen vorstellbaren Regeln 6 x 6 x 5 = 180 Regelsätze
+	 *  und fügt diese in das rulesArray ein
+	 */
+	private void setRules() {
 		for(int stateOne : states){
 			for(int stateTwo : states){
 				for(int action : actions){
@@ -29,6 +33,16 @@ public class PosDetermination {
 		}
 	}
 
+	/**
+	 * 	Dient als input Methode - belommt von außen Wahrscheinlichkeiten für Hindernissarten
+	 *  Setzt im Working Memory das letzte Hinderniss und das aktuell wahrscheinlichste 
+	 *  Hinderniss neu.
+	 *  Zudem wird hier die evaulate() Methode aufgerufen.
+	 *  Zudem wird hier die momentan beste Regel bestimmt - durch den Aufruf der der Methode
+	 *  chechRules();
+	 *  Aufgrund dem Rückgabewert der checkRules wird dann entschieden welche Action im 
+	 *  Working Memmory gesetzt wird.
+	 */
 	public void updatePos(double[] probs) { //INPUT METHOD
 		wm.setLastObst(wm.getCurrObst());
 		wm.setCurrObst(getValues(probs));
@@ -46,7 +60,13 @@ public class PosDetermination {
 			preRuleFired = -1;
 		}
 	}
-		
+	
+	/**
+	 * 	Evaluate Rule bestimmt wie sinnvoll die Anwendung der Regel war und 
+	 *  gewichtet diese entsprechend hoch oder runter.
+	 *  Sollte eine Regel abgewertet werden, werden gleichzeit alle anderen
+	 *  Regeln zusätzlich höher gewichtet.
+	 */
 	private void evaluateRule(){
 		//N++;
 		if(wm.getCurrObstString().equals("FREI")){
@@ -67,6 +87,12 @@ public class PosDetermination {
 		}
 	}
 	
+	/**
+	 * 	Hier wird die Beste Regel ermittelt und deren Index in der rulesArray Liste
+	 *  zurückgegeben.
+	 *  Dazu wird aus dem rulesArray die ruleToFire gesucht, die die höchste Gewichtung 
+	 *  besitzt.
+	 */
 	private int checkRules() {
 		int ruleToFire = -1;
 		matchRules();
@@ -88,7 +114,11 @@ public class PosDetermination {
 		return ruleToFire;
 	}
 
-	private void matchRules() { //11 Regel_Matching
+	/**
+	 * 	Match Rules bestimmt welche Regel am besten passt, indem das letzte und das aktuelle
+	 *  Objekt aus dem Working Memmory mit dem der Regel verglichen werden.
+	 */
+	private void matchRules() { 
 		for(Rule rule : rulesArray){
 			if(rule.getLastObst() == wm.getLastObst()){
 				if(rule.getCurrObst() == wm.getCurrObst()){
@@ -101,10 +131,17 @@ public class PosDetermination {
 		}
 	}
 
+	/**
+	 * 	Dient als Output der Klasse und gibt den aktuellen Befehl aus dem Working Memory zurück.
+	 */
 	public String getResult() {
 		return wm.getActionString();
 	}
-
+	
+	/**
+	 * 	Gibt den Index und somit das Objekt aus dem probs Array zurück, das die höchste Wahrscheinlichkeit
+	 *  besitzt.
+	 */
 	private int getValues(double[] probs) {
 		int index = 0;
 		double currentMax = -1;
