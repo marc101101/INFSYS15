@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ dbus-2.7.jar dbus-bin-2.7.jar dbus-bin.jar dbus-vi
+ ewer-2.7.jar dbus-viewer.jar dbus.jar debug-disable.jar hexdump.jar u
+ nix.jar javax.json-1.0.2.jar weka.jar
+Class-Path: .
+Rsrc-Main-Class: thymio.model.ThymioMain
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+

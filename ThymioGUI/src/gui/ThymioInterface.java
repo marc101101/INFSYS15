@@ -36,7 +36,7 @@ public class ThymioInterface {
 	}
 
 	private void initComponents() {
-		//myConnector = new ThymioConnector(this);
+		myConnector = new ThymioConnector(this);
 		myIRData = new InfraRed();
 		m = new Map(15, 15, 1);
 		mp = new MapPanel(m, myIRData, window);
@@ -81,23 +81,23 @@ public class ThymioInterface {
 	protected void performAction(ActionEvent e) {
 		 if (e.getSource() == window.getFwButton()) {
 			 window.appendLine("FORWARD!");
-			 //myConnector.sendMessage("set speed 50 50");
+			 myConnector.sendMessage("set speed 50 50");
 		 } 
 		 else if (e.getSource() == window.getBwButton()) {
 			 window.appendLine("BACKWARD!");
-			 //myConnector.sendMessage("set speed -50 -50");
+			 myConnector.sendMessage("set speed -50 -50");
 		 } 
 		 else if (e.getSource() == window.getLeftButton()) {
 			 window.appendLine("LEFT!");
-			 //myConnector.sendMessage("set speed -50 50");
+			 myConnector.sendMessage("set speed -50 50");
 		 } 
 		 else if (e.getSource() == window.getRightButton()) {
 			 window.appendLine("RIGHT!");
-			 //myConnector.sendMessage("set speed 50 -50");
+			 myConnector.sendMessage("set speed 50 -50");
 		 } 
 		 else if (e.getSource() == window.getStopButton()) {
 			 window.appendLine("STOP!");
-			 //myConnector.sendMessage("set speed 0 0");
+			 myConnector.sendMessage("set speed 0 0");
 		 } 
 		 else {
 			 return;

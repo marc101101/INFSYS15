@@ -1,45 +1,53 @@
 package control;
 
 public class WorkingMemory {
+	
+	int lastObst = 6;
+	int currentObst = 6;
+	int action;
+	ValueParser parser = new ValueParser();
 
 	public WorkingMemory() {
 	}
 
 	public int getLastObst() {
-		return 0;
+		return lastObst;
 	}
 
 	public String getLastObstString() {
-		return "";
+		return parser.getObstacle(lastObst); //FINISHED
 	}
 
 	public String getActionString() {
-		return "";
+		return parser.getAction(action); //FINISHED
 	}
 
-	private String getClassFromID(int id) {
+	/**private String getClassFromID(int id) { //BRAUCH MA NED HAM DEN VALUEPARSER
 		return "";
-	}
+	}*/
 
 	public String getCurrObstString() {
-		return "";
+		return parser.getObstacle(currentObst); //FINISHED
 	}
 
 	public void setLastObst(int lastObst) {
+		this.lastObst = lastObst;
 	}
 
 	public int getCurrObst() {
-		return 0;
+		return currentObst;
 	}
 
 	public void setCurrObst(int currObst) {
+		this.currentObst = currObst;
 	}
 
-	public int getAction() {
-		return 0;
+	public int getAction() { 
+		return action;
 	}
 
 	public void setAction(int action) {
+		this.action = action;
 	}
 
 }
