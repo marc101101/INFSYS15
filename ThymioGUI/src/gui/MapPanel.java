@@ -32,7 +32,7 @@ public class MapPanel extends JPanel {
 	}
 
 	public void setPose(double x, double y, double theta) {
-		myMap.setPose(x, y, theta);
+		//myMap.setPose(x, y, theta);
 		this.repaint();
 	}
 
