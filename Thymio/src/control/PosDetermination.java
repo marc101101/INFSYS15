@@ -41,9 +41,9 @@ public class PosDetermination {
 	 *  Zudem wird hier die momentan beste Regel bestimmt - durch den Aufruf der der Methode
 	 *  chechRules();
 	 *  Aufgrund dem Rückgabewert der checkRules wird dann entschieden welche Action im 
-	 *  Working Memmory gesetzt wird.
+	 *  Working Memory gesetzt wird.
 	 */
-	public void updatePos(double[] probs) { //INPUT METHOD
+	public void updatePos(double[] probs) {
 		wm.setLastObst(wm.getCurrObst());
 		wm.setCurrObst(getValues(probs));
 		
@@ -116,7 +116,7 @@ public class PosDetermination {
 
 	/**
 	 * 	Match Rules bestimmt welche Regel am besten passt, indem das letzte und das aktuelle
-	 *  Objekt aus dem Working Memmory mit dem der Regel verglichen werden.
+	 *  Objekt aus dem Working Memory mit dem der Regel verglichen werden.
 	 */
 	private void matchRules() { 
 		for(Rule rule : rulesArray){

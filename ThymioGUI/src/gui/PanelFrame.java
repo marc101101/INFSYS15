@@ -101,7 +101,7 @@ public class PanelFrame extends JFrame implements ActionListener {
 		iface.performAction(e);		
 	}
 	
-	public void setMap(MapPanel mp){
+	public void setMap(MapPanel mp){ //von thymioInterface baut map
 		map = mp;
 		pane.add(mp);
 	}
