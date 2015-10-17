@@ -16,7 +16,7 @@ public class Map {
 	private MapElement [][] element; // Array of MapElement representing the environment
 	private double edgelength; // each element in this maps covers edgelength^2 square units.
 	
-	public static final int N = 20; // number of occupied elements
+	public static final int N = 10; // number of occupied elements
 		
 	public Map(int x, int y, double l) {
 		edgelength = l;
@@ -79,7 +79,7 @@ public class Map {
 			}
 		}
 		
-		/*
+		
 		// collect N distinct random numbers between 0 and the max number of MapElements in this Map
 		
 		while (occupiedElements.size() < N) {
@@ -96,7 +96,7 @@ public class Map {
 			
 			element[x][y].setOccupied();
 		}
-		*/
+		
 	}
 	
 	public void printMap() {
@@ -110,6 +110,15 @@ public class Map {
 			}
 			
 			System.out.print("\n");
+		}
+	}
+	
+	public boolean isOccupied(int x, int y){
+		if(element[x][y].isOccupied()){
+			return true;
+		}
+		else{
+			return false;
 		}
 	}
 

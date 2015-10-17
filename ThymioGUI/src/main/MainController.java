@@ -7,7 +7,7 @@ public class MainController {
 	private ThymioInterface gui;
 
 	public MainController() {
-		gui = new ThymioInterface();
+			gui = new ThymioInterface();		
 	}
 
 	public static void main(String[] args) {
