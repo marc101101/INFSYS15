@@ -51,7 +51,7 @@ public class Rule {
 	public int getAction(){
 		return action;
 	}
-	
+
 	public void upperWeight(){
 		weight++;
 	}
