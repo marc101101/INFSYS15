@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import dataanalysis.InfraRed;
+
 
 public class PanelFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
@@ -21,20 +23,26 @@ public class PanelFrame extends JFrame implements ActionListener {
 	private Container pane;
 	private JTextArea console;
 	private JPanel controlbar, buttons;
-	private MapPanel map;
+	private MapPanel mp;
 	private JButton fwButton, bwButton, leftButton, rightButton, stopButton;
 	
 	public PanelFrame(ThymioInterface iface){
 		this.iface = iface;
+		mp = new MapPanel(iface.getMap(), new InfraRed(), this);
+		
 		pane = getContentPane();
 		pane.setBackground(Color.BLACK);
 		pane.setLayout(new BorderLayout(5,5));
+		pane.add(mp, BorderLayout.LINE_START);
 		
 		initConsole();
 		initControls();
 		addListeners();
 	}
 	
+	/**
+	 * used for loggig actions on the screen
+	 */
 	private void initConsole(){
 		console = new JTextArea(30, 10);
 		console.setLineWrap(true);
@@ -44,9 +52,12 @@ public class PanelFrame extends JFrame implements ActionListener {
 		console.setFont(new Font("Verdana", Font.BOLD, 12));
 
 		JScrollPane scrollPane = new JScrollPane(console);	
-		pane.add(scrollPane, BorderLayout.LINE_START);
+		pane.add(scrollPane, BorderLayout.EAST);
 	}
 
+	/**
+	 * Adds the different buttons in a new layout
+	 */
 	private void initControls(){
 		controlbar = new JPanel();
 		controlbar.setBackground(Color.LIGHT_GRAY);
@@ -63,6 +74,9 @@ public class PanelFrame extends JFrame implements ActionListener {
 		pane.add(controlbar, BorderLayout.PAGE_END);
 	}
 	
+	/**
+	 * Addes ActionListeners to all buttons, all calling the same method actionPerformed
+	 */
 	private void addListeners(){
 		fwButton.addActionListener(this);
 		bwButton.addActionListener(this);
@@ -71,6 +85,10 @@ public class PanelFrame extends JFrame implements ActionListener {
 		stopButton.addActionListener(this);	
 	}
 	
+	/**
+	 * Adds line to the console
+	 * @param line text to be added
+	 */
 	public void appendLine(String line){
 		console.append(line + "\n");
 	}
@@ -94,14 +112,28 @@ public class PanelFrame extends JFrame implements ActionListener {
 	public JButton getStopButton(){
 		return this.stopButton;
 	}
+	
+	/**
+	 * Updates the position of the Thymio on the map
+	 */
+	public void updatePosition(double posXmm, double posYmm) {
+		//myMapDisplay.setPose(posXmm/10, posYmm/10, theta);
+		mp.setPose(posXmm/10, posYmm/10, iface.getTheta());
+	}
 
+	/**
+	 * Updates the obstacle currently "seen" by the Thymio
+	 * @param obstClass Class determined by thymioEvent of ThymioInterface.java
+	 */
+	public void updateObstacle(int obstClass) {
+		mp.updateObstacle(obstClass);
+	}
+
+	/**
+	 * Notifies ThymioInterface of occurred event
+	 */
 	public void actionPerformed(ActionEvent e) {
 		iface.performAction(e);		
 	}
 	
-	public void setMap(MapPanel mp){ //von thymioInterface baut map
-		map = mp;
-		pane.add(mp);
-	}
-
 }

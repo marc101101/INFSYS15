@@ -4,39 +4,41 @@ import java.awt.event.ActionEvent;
 
 import javax.json.JsonArray;
 
-import client.ThymioConnector;
-import dataanalysis.InfraRed;
 import map.Map;
 
 import javax.swing.*;
 
 public class ThymioInterface {
+	
+	private static final int FREI = 6;
 
-	private static final int FREI = 0;
+	//window dimensions
+	private static final int WINDOW_WIDTH = 800;
+	private static final int WINDOW_HEIGHT = 800;
 	
 	//private ThymioConnector myConnector;
 	private PanelFrame window;
 	private Map m;
-	private MapPanel mp;
 
-	public ThymioInterface() {
-		initWindow();
+	public ThymioInterface(){
 		initComponents();
+		initWindow();
 	}
 	
+	/**
+	 * Inits the general window in which the UI will be displazed with basic parameters
+	 */
 	private void initWindow(){
 		window = new PanelFrame(this);
 		window.setTitle("ThymioGUI");
-		window.setSize(800, 800);
+		window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		window.setVisible(true);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void initComponents() {
 		//myConnector = new ThymioConnector(this);
-		m = new Map(15, 15, 1);
-		mp = new MapPanel(m, new InfraRed(), window);
-		window.setMap(mp);
+		m = new Map(10, 10, 1);
 	}
 
 	public void thymioEvent(JsonArray data) {
@@ -50,6 +52,7 @@ public class ThymioInterface {
 		if (status.equals("ok")) {
 			obstacles = data.getJsonObject(1).getJsonArray("obstacles");
 
+			//gets highest probability
 			bestProb = Double.MIN_VALUE;
 			for (int i = 0; i < 6; i++) {
 				double p = Double.parseDouble(obstacles.getJsonObject(i)
@@ -62,13 +65,11 @@ public class ThymioInterface {
 			}
 			position = data.getJsonObject(2).getJsonArray("position");
 
-			updatePosition(
-					Double.parseDouble(position.getJsonObject(0).getString(
-							"pos_x")),
-					Double.parseDouble(position.getJsonObject(1).getString(
-							"pos_y")));
-			updateObstacle(bestClass);
-			//window.repaint();
+			window.updatePosition(
+					Double.parseDouble(position.getJsonObject(0).getString("pos_x")),
+					Double.parseDouble(position.getJsonObject(1).getString("pos_y")));
+			window.updateObstacle(bestClass);
+			window.repaint();
 		} else {
 			System.out.println("ERROR: " + status);
 		}
@@ -100,12 +101,11 @@ public class ThymioInterface {
 		 }
 	}
 
-	private void updatePosition(double posXmm, double posYmm) {
-		//myMapDisplay.setPose(posXmm/10, posYmm/10, theta);
-		mp.setPose(posXmm/10, posYmm/10, m.getThymioOrientation());
+	public Map getMap(){
+		return m;
 	}
-
-	private void updateObstacle(int obstClass) {
+	
+	public double getTheta(){
+		return m.getThymioOrientation();
 	}
-
 }
