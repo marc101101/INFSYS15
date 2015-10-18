@@ -82,7 +82,7 @@ public class PanelFrame extends JFrame implements ActionListener {
 		bwButton.addActionListener(this);
 		leftButton.addActionListener(this);
 		rightButton.addActionListener(this);
-		stopButton.addActionListener(this);		
+		stopButton.addActionListener(this);	
 	}
 	
 	/**

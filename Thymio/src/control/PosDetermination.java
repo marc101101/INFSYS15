@@ -22,7 +22,7 @@ public class PosDetermination {
 	 * 	Erstellt alle möglichen vorstellbaren Regeln 6 x 6 x 5 = 180 Regelsätze
 	 *  und fügt diese in das rulesArray ein
 	 */
-	private void setRules() {
+	private void setRules() { 
 		for(int stateOne : states){
 			for(int stateTwo : states){
 				for(int action : actions){
