@@ -1,20 +1,17 @@
 package gui;
 
 import java.awt.event.ActionEvent;
-
 import javax.json.JsonArray;
-
 import map.Map;
-
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class ThymioInterface {
 	
-	private static final int FREI = 6;
+	private static final int FREI = 5;
 
 	//window dimensions
 	private static final int WINDOW_WIDTH = 800;
-	private static final int WINDOW_HEIGHT = 800;
+	private static final int WINDOW_HEIGHT = 568;
 	
 	//private ThymioConnector myConnector;
 	private PanelFrame window;
