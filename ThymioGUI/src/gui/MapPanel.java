@@ -144,6 +144,6 @@ public class MapPanel extends JPanel {
 	 */
 	public void updateObstacle(int obstClass){
 		//gets decreased by one, because we use array-indexes here
-		obstacle = obstClass -1;
+		obstacle = obstClass;
 	}
 }

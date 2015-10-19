@@ -12,7 +12,7 @@ public class ThymioInterface {
 	private static final int FREI = 5;
 
 	//window dimensions
-	private static final int WINDOW_WIDTH = 800;
+	private static final int WINDOW_WIDTH = 375;
 	private static final int WINDOW_HEIGHT = 768;
 	
 	private ThymioConnector myConnector;
@@ -63,15 +63,18 @@ public class ThymioInterface {
 			for (int i = 0; i < 6; i++) {
 				double p = Double.parseDouble(obstacles.getJsonObject(i)
 						.getString("class_" + i));
-
+				
+				System.out.println(p);
+				
 				if (p > bestProb) {
 					bestProb = p;
 					bestClass = i;
 				}
 			}
+			System.out.println(bestClass);
 			position = data.getJsonObject(2).getJsonArray("position");
 			
-			if((position.getJsonObject(0).getString("pos_x") != null) && (position.getJsonObject(0).getString("pos_y") != null)){
+			if(position.getJsonObject(0) != null){
 				window.updatePosition(
 						Double.parseDouble(position.getJsonObject(0).getString("pos_x")),
 						Double.parseDouble(position.getJsonObject(1).getString("pos_y")));
