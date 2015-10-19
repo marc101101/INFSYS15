@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.concurrent.SynchronousQueue;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,28 +16,31 @@ import map.Map;
 public class MapPanel extends JPanel {
 	
 	//obstacle classes
-	private static final int FRONTAL = 1;
-	private static final int ECKE = 2;
-	private static final int KANTE = 3;
-	private static final int LINKS = 4;
-	private static final int RECHTS = 5;
-	private static final int FREI = 6;
+	private static final int FRONTAL = 0;
+	private static final int ECKE = 1;
+	private static final int KANTE = 2;
+	private static final int LINKS = 3;
+	private static final int RECHTS = 4;
+	private static final int FREI = 5;
 		
 	//images
-	private Image imgFree, imgFrontal, imgKante, imgLinks, imgRechts, imgEcke;
+	private Image[] images;
 	
 	private static final long serialVersionUID = 1L;
 	private Map myMap;
 	public static final int LENGTHSCALE = 40;
 	private double lengthX;
 	private InfraRed myIRData;
+	private int obstacle;
 
 	public MapPanel(Map m, InfraRed ir, JFrame f) {
 		myMap = m;
 		myIRData = ir;
-		//lengthX = myMap.getEdgeLengthX();
 		lengthX = myMap.getEdgeLength();
-		myMap.setPose(0, 0, 0);
+		
+		setPose(0, 0, 0);
+		
+		obstacle = FREI;
 
 		this.setPreferredSize(new Dimension(myMap.getSizeX() * LENGTHSCALE + (int) f.getBounds().getWidth(),
 				myMap.getSizeY() * LENGTHSCALE + (int) f.getBounds().getHeight()));
@@ -45,13 +50,17 @@ public class MapPanel extends JPanel {
 		loadImages();
 	}
 	
+	/**
+	 * Places all images for representation the Thymio/current obstacle in an array for more convenient use
+	 */
 	private void loadImages(){
-		imgEcke = new ImageIcon("resources/ecke.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		imgFree = new ImageIcon("resources/free.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		imgFrontal = new ImageIcon("resources/frontal.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		imgKante = new ImageIcon("resources/kante.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		imgLinks = new ImageIcon("resources/left.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		imgRechts = new ImageIcon("resources/right.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images = new Image[6];
+		images[ECKE] = new ImageIcon("resources/ecke.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images[FREI] = new ImageIcon("resources/free.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images[FRONTAL] = new ImageIcon("resources/frontal.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images[KANTE] = new ImageIcon("resources/kante.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images[LINKS] = new ImageIcon("resources/left.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		images[RECHTS] = new ImageIcon("resources/right.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
 	}
 	
 
@@ -60,14 +69,25 @@ public class MapPanel extends JPanel {
 		this.repaint();
 	}
 	
+	/**
+	 * Takes the array of previously known occupied spaces and draws a square to mark them as occupied
+	 */
 	private void drawObstacles(Graphics g){
+		g.setColor(Color.DARK_GRAY);
 		for(int y = 0; y < myMap.getSizeY(); y++){
 			for(int x = 0; x < myMap.getSizeX(); x++){
 				if(myMap.isOccupied(x, y)){
-					g.drawImage(imgFree, x * LENGTHSCALE, y * LENGTHSCALE, null);
+					g.fillRect(x*LENGTHSCALE+1, this.getHeight() -((y+1)*LENGTHSCALE-2), LENGTHSCALE-3, LENGTHSCALE-3);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Draws the Thymio on the map, position was updated by ThymioEvent
+	 */
+	private void drawThymio(Graphics g){
+		g.drawImage(images[obstacle], myMap.getThymioX(), this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
 	}
 
 	public void paint(Graphics g) {
@@ -89,16 +109,17 @@ public class MapPanel extends JPanel {
 		}
 		
 		drawObstacles(g);
-		
+		drawThymio(g);
+
 		dx = (myMap.getPosX() + 5.5 * Math.cos(angle)) / lengthX * LENGTHSCALE;
 		dy = this.getHeight() - (myMap.getPosY() + 5.5 * Math.sin(angle)) / lengthX * LENGTHSCALE;		
 
-		/*
-		g.fillRect((int)(myMap.getPosX()/lengthX*LENGTHSCALE),
+		
+		/*g.fillRect((int)(myMap.getPosX()/lengthX*LENGTHSCALE),
 				this.getHeight() - 5 - (int)(myMap.getPosY()/lengthX*LENGTHSCALE), 5, 5);//was commented out
 		*/
+		
 		g.setColor(Color.BLUE);
-
 		g.drawLine((int) ((myMap.getPosX() - 5.5 * Math.cos(angle)) / lengthX * LENGTHSCALE),
 				(int) (this.getHeight() - (myMap.getPosY() - 5.5 * Math.sin(angle)) / lengthX * LENGTHSCALE), (int) dx,
 				(int) dy);
@@ -116,24 +137,13 @@ public class MapPanel extends JPanel {
 			}
 		}
 	}
-
-	public double getPosX() {
-		return myMap.getPosX();
-	}
-
-	public double getPosY() {
-		return myMap.getPosY();
-	}
 	
+	/**
+	 * Updates the current obstacle to change icon of thymio
+	 * @param obstClass - Class of obstacle, corresponds to server-side
+	 */
 	public void updateObstacle(int obstClass){
-		//TODO: change image of obstacle currently seen
-		switch(obstClass){
-			case FRONTAL:  break;
-			case ECKE: break;
-			case KANTE: break;
-			case LINKS: break;
-			case RECHTS: break;
-			case FREI: break;
-		};
+		//gets decreased by one, because we use array-indexes here
+		obstacle = obstClass -1;
 	}
 }

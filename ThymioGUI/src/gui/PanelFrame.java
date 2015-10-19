@@ -28,11 +28,11 @@ public class PanelFrame extends JFrame implements ActionListener {
 	
 	public PanelFrame(ThymioInterface iface){
 		this.iface = iface;
-		mp = new MapPanel(iface.getMap(), new InfraRed(), this);
 		
 		pane = getContentPane();
 		pane.setBackground(Color.BLACK);
 		pane.setLayout(new BorderLayout(5,5));
+		mp = new MapPanel(iface.getMap(), new InfraRed(), this);
 		pane.add(mp, BorderLayout.LINE_START);
 		
 		initConsole();
