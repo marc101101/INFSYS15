@@ -5,12 +5,12 @@ public class ValueParser {
 	static String getAction (int action){
 		String actState = "";
 		switch(action){
-			case 1: actState =  "VOR"; break;
-			case 2: actState =  "ZURÜCK"; break;
-			case 3: actState =  "LINKS"; break;
-			case 4: actState =  "RECHTS"; break;
-			case 5: actState =  "STOP"; break;
-			case -1: actState =  "unKnown"; break;
+			case 1: actState =  "set speed 50 50"; break;
+			case 2: actState =  "set speed -50 -50"; break;
+			case 3: actState =  "set speed -50 50"; break;
+			case 4: actState =  "set speed 50 -50"; break;
+			case 5: actState =  "set speed 0 0"; break;
+			case -1: actState =  "set speed 0 0"; break;
 		}
 		return actState;
 	}
@@ -27,5 +27,4 @@ public class ValueParser {
 		}
 		return actState;
 	}
-
 }

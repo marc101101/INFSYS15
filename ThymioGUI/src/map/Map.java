@@ -56,6 +56,8 @@ public class Map {
 	}
 		
 	public double getPosX() {
+		posX = thymioX / 17;
+		System.out.println("POS X:  " + posX);
 		return posX;
 	}
 	

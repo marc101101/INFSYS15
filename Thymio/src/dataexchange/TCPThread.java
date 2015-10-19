@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import javax.json.JsonObject;
 
+import control.PosDetermination;
 import thymio.devicecontrol.USBConnection;
 
 public class TCPThread extends Thread {
@@ -33,7 +34,7 @@ public class TCPThread extends Thread {
 				myConn.setConnectionClosed(false);
 				
 				while (!myConn.isConnectionClosed()) {
-					System.out.println("waiting for request");
+					 System.out.println("waiting for request");
 					 myConn.setIn(new BufferedReader(new InputStreamReader(server.getInputStream())));
 					 myConn.setOut(new DataOutputStream(server.getOutputStream()));
 					 

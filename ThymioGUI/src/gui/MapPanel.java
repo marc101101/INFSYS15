@@ -28,7 +28,7 @@ public class MapPanel extends JPanel {
 	
 	private static final long serialVersionUID = 1L;
 	private Map myMap;
-	public static final int LENGTHSCALE = 40;
+	public static final int LENGTHSCALE = 30;
 	private double lengthX;
 	private InfraRed myIRData;
 	private int obstacle;

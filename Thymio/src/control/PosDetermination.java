@@ -1,5 +1,8 @@
 package control;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class PosDetermination {
@@ -10,11 +13,18 @@ public class PosDetermination {
 	private ArrayList<Rule> rulesArray;
 	private WorkingMemory wm;
 	private int preRuleFired = -1;
+	private FileWriter writer;
 
 	public PosDetermination(double[] probsPos) {
 		this.probPos = probPos;
 		rulesArray = new ArrayList<Rule>();
 		wm = new WorkingMemory();
+		String timeStamp = new SimpleDateFormat("SSSSSSSS").format(System.currentTimeMillis());
+		try {
+			writer = new FileWriter("/home/pi/evalRules" + timeStamp + ".csv");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		setRules();
 	}
 
@@ -23,11 +33,15 @@ public class PosDetermination {
 	 *  und fügt diese in das rulesArray ein
 	 */
 	private void setRules() { 
+		Rule rule1 = new Rule (6,6,5);
+		rulesArray.add(rule1);
 		for(int stateOne : states){
 			for(int stateTwo : states){
 				for(int action : actions){
-					Rule rule = new Rule(stateOne,stateTwo,action);
-					rulesArray.add(rule);
+					if((stateOne != 6) && (stateTwo != 6)){
+						Rule rule = new Rule(stateOne,stateTwo,action);
+						rulesArray.add(rule);
+					}
 				}
 			}
 		}
@@ -47,6 +61,8 @@ public class PosDetermination {
 		wm.setLastObst(wm.getCurrObst());
 		wm.setCurrObst(getValues(probs));
 		
+		printRules();
+		
 		evaluateRule();
 		
 		int bestRule = checkRules();
@@ -58,6 +74,21 @@ public class PosDetermination {
 		else{
 			wm.setAction(-1);
 			preRuleFired = -1;
+		}
+	}
+	
+	public void printRules(){
+		try {
+			writer.append("EMPTY LINE");
+			int index = 0;
+			for(Rule rule : rulesArray){
+				writer.append("RULE " + index + " :" + rule.lastObst + "," + rule.currObst + "," + rule.getWeight());
+				index++;
+			}
+			writer.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -151,6 +182,7 @@ public class PosDetermination {
 				index = i;
 			}
 		}
+		System.out.println("HighestValue: " + index+1);
 		return index+1;
 	}
 

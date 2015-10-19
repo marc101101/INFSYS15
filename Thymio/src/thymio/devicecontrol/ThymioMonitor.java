@@ -6,18 +6,34 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObject;
 
 import classification.ObstacleClassifier;
+import control.PosDetermination;
 import thymio.model.Thymio;
 import dataexchange.TCPConnection;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 public class ThymioMonitor extends Thread {
 	private TCPConnection myConnection;
 	private Thymio myThymio;
 	private ObstacleClassifier myAlerter;
+	private double[] startProb = { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+	PosDetermination posDet;
+	FileWriter writer;
 
 	public ThymioMonitor(TCPConnection c, Thymio t) {
 		myConnection = c;
 		myThymio = t;
 		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data.arff");
+		posDet = new PosDetermination(startProb);
+		String timeStamp = new SimpleDateFormat("SSSSSSSS").format(System.currentTimeMillis());
+		try{
+			writer = new FileWriter("/home/pi/dataCollection" + timeStamp + ".csv");
+		}
+		catch(IOException e){
+			System.out.println(e);
+		}
 	}
 	
 	public void run() {
@@ -26,6 +42,20 @@ public class ThymioMonitor extends Thread {
 		
 		while (true) {
 			double [] probs = myAlerter.classify(myThymio.getVariable("prox.horizontal"));
+			try{
+				writer.append("Array: " + probs[0] + " "+ probs[1]+ " "+ probs[2]+ " "+ probs[3]+ " "+ probs[4]+ " "+ probs[5]+"\n");
+				writer.flush();
+			}
+			catch(IOException e){
+				System.out.println(e);
+			} 
+			posDet.updatePos(probs);
+			String detResult = posDet.getResult();
+			if(!detResult.equals("set speed 0 0")){
+				myConnection.getUSB().process(detResult);
+			}
+			System.out.println(detResult);
+			
 			JsonArrayBuilder values = factory.createArrayBuilder();
 
 			result = factory.createArrayBuilder();

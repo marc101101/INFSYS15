@@ -131,6 +131,10 @@ public class TCPConnection {
 		}
 	}
 	
+	public USBConnection getUSB(){
+		return thisThymio;
+	}
+	
 	public void sendMessage(String mess) {
 		if (out != null) {
 			try {

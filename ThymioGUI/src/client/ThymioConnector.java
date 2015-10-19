@@ -26,14 +26,14 @@ public class ThymioConnector {
 	private ThymioReadThread myReadThread;
 	
 	public ThymioConnector(ThymioInterface mi) {
-		//init(mi);
+		init(mi);
 	}
 	
 	public void init(ThymioInterface mi) {
 		try {
 			// set up
 
-			clientSocket = new Socket("192.168.0.107", 6789);
+			clientSocket = new Socket("192.168.43.107", 6789);
 			toThymio = new DataOutputStream(clientSocket.getOutputStream());
 			fromThymio = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 		} catch (IOException e) {
