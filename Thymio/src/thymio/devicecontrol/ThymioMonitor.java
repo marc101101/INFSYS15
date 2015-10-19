@@ -17,7 +17,7 @@ public class ThymioMonitor extends Thread {
 	public ThymioMonitor(TCPConnection c, Thymio t) {
 		myConnection = c;
 		myThymio = t;
-		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data_simple.arff");
+		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data.arff");
 	}
 	
 	public void run() {
