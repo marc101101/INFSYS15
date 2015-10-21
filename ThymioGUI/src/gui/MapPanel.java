@@ -87,7 +87,7 @@ public class MapPanel extends JPanel {
 	 * Draws the Thymio on the map, position was updated by ThymioEvent
 	 */
 	private void drawThymio(Graphics g){
-		g.drawImage(images[obstacle], myMap.getThymioX(), this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
+		g.drawImage(images[obstacle], myMap.getThymioX()*LENGTHSCALE, this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
 	}
 
 	public void paint(Graphics g) {
