@@ -34,7 +34,9 @@ public class Map {
 	
 	public void setPose(double x, double y, double theta) {
 		posX = x;
+		thymioX = (int) (x/16D);
 		posY = y;
+		thymioY = (int) (y/16D);
 		thymioTheta = theta;
 	}
 	
@@ -56,8 +58,6 @@ public class Map {
 	}
 		
 	public double getPosX() {
-		posX = thymioX / 17;
-		System.out.println("POS X:  " + posX);
 		return posX;
 	}
 	

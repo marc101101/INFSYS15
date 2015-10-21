@@ -22,10 +22,11 @@ public class ThymioInterface {
 	public ThymioInterface(){
 		initComponents();
 		initWindow();
+		
+		//waiting for Images to load
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		window.repaint();
@@ -64,14 +65,12 @@ public class ThymioInterface {
 				double p = Double.parseDouble(obstacles.getJsonObject(i)
 						.getString("class_" + i));
 				
-				System.out.println(p);
 				
 				if (p > bestProb) {
 					bestProb = p;
 					bestClass = i;
 				}
 			}
-			System.out.println(bestClass);
 			position = data.getJsonObject(2).getJsonArray("position");
 			
 			if(position.getJsonObject(0) != null){
@@ -89,7 +88,7 @@ public class ThymioInterface {
 	protected void performAction(ActionEvent e) {
 		 if (e.getSource() == window.getFwButton()) {
 			 window.appendLine("FORWARD!");
-			 myConnector.sendMessage("set speed 50 50");
+			 //myConnector.sendMessage("set speed 50 50");
 		 } 
 		 else if (e.getSource() == window.getBwButton()) {
 			 window.appendLine("BACKWARD!");
