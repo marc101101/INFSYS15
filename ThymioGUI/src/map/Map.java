@@ -32,7 +32,7 @@ public class Map {
 		return edgelength;
 	}
 	
-	public void setPose(double x, double y, double theta) {
+	public void setPose(double y, double x, double theta) {
 		posX = x;
 		thymioX = (int) (x/16D);
 		posY = y;
