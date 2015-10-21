@@ -54,6 +54,11 @@ public class ThymioMonitor extends Thread {
 			if(!detResult.equals("set speed 0 0")){
 				myConnection.getUSB().process(detResult);
 			}
+			String histCurrObst = posDet.getCurrObsWM();
+			String histPrevObst = posDet.getLastObsWM();
+			if(!(histPrevObst.equals("FREI")) && (histCurrObst.equals("FREI"))){
+				myConnection.getUSB().process("set speed 0 0");
+			}
 			System.out.println(detResult);
 			
 			JsonArrayBuilder values = factory.createArrayBuilder();

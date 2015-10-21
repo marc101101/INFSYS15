@@ -45,7 +45,7 @@ public class ThymioReadThread extends Thread {
 				
 					data = result.getJsonArray("result");
 					if (data != null) {
-						//System.out.println(data);
+						System.out.println(data);
 						//myInterface.thymioEvent(data);
 					}
 					else {

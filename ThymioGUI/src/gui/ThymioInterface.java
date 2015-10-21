@@ -88,7 +88,7 @@ public class ThymioInterface {
 	protected void performAction(ActionEvent e) {
 		 if (e.getSource() == window.getFwButton()) {
 			 window.appendLine("FORWARD!");
-			 //myConnector.sendMessage("set speed 50 50");
+			 myConnector.sendMessage("set speed 50 50"); 
 		 } 
 		 else if (e.getSource() == window.getBwButton()) {
 			 window.appendLine("BACKWARD!");

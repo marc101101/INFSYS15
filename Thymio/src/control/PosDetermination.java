@@ -56,8 +56,6 @@ public class PosDetermination {
 		wm.setLastObst(wm.getCurrObst());
 		wm.setCurrObst(getValues(probs));
 		
-		printRules();
-		
 		evaluateRule();
 		
 		int bestRule = checkRules();
@@ -70,16 +68,6 @@ public class PosDetermination {
 			wm.setAction(-1);
 			preRuleFired = -1;
 		}
-	}
-	
-	public void printRules(){
-		
-			int index = 0;
-			for(Rule rule : rulesArray){
-				System.out.println("RULE " + index + " :" + rule.lastObst + "," + rule.currObst + "," + rule.action + ","+ rule.getWeight());
-				index++;
-				}
-		
 	}
 	
 	/**
@@ -159,6 +147,14 @@ public class PosDetermination {
 		return wm.getActionString();
 	}
 	
+	public String getCurrObsWM(){
+		return wm.getCurrObstString();
+	}
+	
+	public String getLastObsWM(){
+		return wm.getLastObstString();
+	}
+	
 	/**
 	 * 	Gibt den Index und somit das Objekt aus dem probs Array zurück, das die höchste Wahrscheinlichkeit
 	 *  besitzt.
@@ -172,7 +168,6 @@ public class PosDetermination {
 				index = i;
 			}
 		}
-		System.out.println("HighestValue: " + index+1);
 		return index+1;
 	}
 
