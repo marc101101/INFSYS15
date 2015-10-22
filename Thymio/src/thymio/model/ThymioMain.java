@@ -20,6 +20,7 @@ public class ThymioMain {
 	
 	public ThymioMain() {
 		System.out.println("Setting up Thymio ...");
+
 		myDevice = new USBConnection();
 		if (myDevice.isAlive()) {
 			communication = new TCPConnection(myDevice);

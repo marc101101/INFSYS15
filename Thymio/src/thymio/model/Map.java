@@ -24,6 +24,7 @@ public class Map {
 	public static final double LENGTH_EDGE_CM = 3.5;
 
 	private KalmanFilter posEstimate;
+	private KalmanFilter rotEstimate;
 	private DenseMatrix64F Q;
 	private DenseMatrix64F P;
 	
@@ -50,19 +51,32 @@ public class Map {
 	private void initFilter() {
 		// process noise
 		
-		double [][] valQ = {{0.000005, 0, 0}, {0, 0.00001, 0}, {0, 0, 0.00000000034}};
+		double [][] valQ = {{0.000005, 0, 0}, {0, 0.000005, 0}, {0, 0, 0.00001}};
 		Q = new DenseMatrix64F(valQ);
 		
 		// initial state
 
-		double [][] valP = {{0.000001, 0, 0},{0,  0.000001, 0}, {0, 0, 0.0002}};
+		double [][] valP = {{0.000001, 0, 0},{0,  0.000001, 0}, {0, 0, 0.000001}};
 		P = new DenseMatrix64F(valP);
 		
-		double [] state = {0, 0, 0};
+		double [] state = {0, 0,  0};
 		
 		posEstimate = new KalmanFilter();
 		posEstimate.configureProcessNoise(Q);
 		posEstimate.setState(DenseMatrix64F.wrap(3, 1, state), P);
+		
+		
+		double [][] valQ_rot = {{0.000001, 0}, {0, 0.000001}};
+		Q = new DenseMatrix64F(valQ_rot);
+		
+		double [][] valP_rot = {{0.00000001, 0}, {0, 0.00000001}};
+		P = new DenseMatrix64F(valP_rot);
+		
+		double [] state_rot = {0, 0};
+		
+		rotEstimate = new KalmanFilter();
+		rotEstimate.configureProcessNoise(Q);
+		rotEstimate.setState(DenseMatrix64F.wrap(2, 1, state_rot), P);
 	}
 	
 	public double getEdgeLength() {
@@ -110,7 +124,38 @@ public class Map {
 		DenseMatrix64F estimState = posEstimate.getState();
 		estPosX = estimState.get(0);
 		estPosY = estimState.get(1);
-		//estTheta = estimState.get(1);
+		
+		double [] delta_rot = new double[2];
+		
+		// state transition
+
+		double [][] valF_rot = {{1,1}, {0,0}};
+		F = new DenseMatrix64F(valF_rot);
+		
+		rotEstimate.configureLinearModel(F);
+		delta[0] = 0;
+		delta[1] = dRpred;
+		
+		Gu = DenseMatrix64F.wrap(2, 1, delta);
+		
+		// observation model
+		
+		double [][] valH_rot = {{0,1}};
+		H = new DenseMatrix64F(valH_rot);
+		
+		// sensor noise
+		
+		double [][] valR_rot = {{0.001}};
+		R = new DenseMatrix64F(valR_rot);
+		
+		// sensor values
+		
+		double [] rotation = {dRobs};
+		
+		rotEstimate.predict(Gu);
+		rotEstimate.update(DenseMatrix64F.wrap(1, 1, rotation), H, R);
+		
+		estTheta = rotEstimate.getState().get(0);
 	}
 
 	public int getThymioX() {
@@ -129,7 +174,11 @@ public class Map {
 	public double getEstimPosY() {
 		return estPosY;
 	}
-		
+
+	public double getEstimTheta() {
+		return estTheta;
+	}
+	
 	public double getPosX() {
 		return posX;
 	}

@@ -22,9 +22,11 @@ public class TCPConnection {
 	private TCPThread myReader;
 	private boolean stopped;
 	private boolean connectionClosed;
+	private boolean sending;
 	
 	public TCPConnection(USBConnection thisThymio) {
 		this.thisThymio = thisThymio;
+		sending = false;
 		
 		try {
 			initTCPIPServer();
@@ -36,6 +38,10 @@ public class TCPConnection {
 			System.err.println("Thymio will not communicate with other processes.");
 			me = null;
 		}
+	}
+	
+	public boolean isSending() {
+		return sending;
 	}
 	
 	public ServerSocket getMe() {
@@ -131,12 +137,10 @@ public class TCPConnection {
 		}
 	}
 	
-	public USBConnection getUSB(){
-		return thisThymio;
-	}
-	
-	public void sendMessage(String mess) {
+	public synchronized void sendMessage(String mess) {
 		if (out != null) {
+			sending = true;
+			
 			try {
 				out.writeBytes(mess + "\n");
 				out.flush();
@@ -144,6 +148,13 @@ public class TCPConnection {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
+			sending = false;
+			notifyAll();
 		}
+	}
+
+	public USBConnection getUSB(){
+		return thisThymio;
 	}
 }

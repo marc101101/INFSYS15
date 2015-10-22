@@ -1,5 +1,7 @@
 package thymio.devicecontrol;
 
+import java.util.List;
+
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonBuilderFactory;
@@ -10,30 +12,18 @@ import control.PosDetermination;
 import thymio.model.Thymio;
 import dataexchange.TCPConnection;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-
 public class ThymioMonitor extends Thread {
 	private TCPConnection myConnection;
 	private Thymio myThymio;
 	private ObstacleClassifier myAlerter;
+	private PosDetermination posDet;
 	private double[] startProb = { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
-	PosDetermination posDet;
-	FileWriter writer;
 
 	public ThymioMonitor(TCPConnection c, Thymio t) {
 		myConnection = c;
 		myThymio = t;
-		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data.arff");
+		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data_simple.arff");
 		posDet = new PosDetermination(startProb);
-		String timeStamp = new SimpleDateFormat("SSSSSSSS").format(System.currentTimeMillis());
-		try{
-			writer = new FileWriter("/home/pi/dataCollection" + timeStamp + ".csv");
-		}
-		catch(IOException e){
-			System.out.println(e);
-		}
 	}
 	
 	public void run() {
@@ -41,14 +31,13 @@ public class ThymioMonitor extends Thread {
 		JsonArrayBuilder result;
 		
 		while (true) {
-			double [] probs = myAlerter.classify(myThymio.getVariable("prox.horizontal"));
-			try{
-				writer.append("Array: " + probs[0] + " "+ probs[1]+ " "+ probs[2]+ " "+ probs[3]+ " "+ probs[4]+ " "+ probs[5]+"\n");
-				writer.flush();
-			}
-			catch(IOException e){
-				System.out.println(e);
-			} 
+			List<Short> sensorRaw = myThymio.getVariable("prox.horizontal");
+			double [] probs = myAlerter.classify(sensorRaw);
+			JsonArrayBuilder values;
+
+			result = factory.createArrayBuilder();
+			result.add(factory.createObjectBuilder().add("status", "ok").build());
+		
 			posDet.updatePos(probs);
 			String detResult = posDet.getResult();
 			if(!detResult.equals("set speed 0 0")){
@@ -59,14 +48,21 @@ public class ThymioMonitor extends Thread {
 			if(!(histPrevObst.equals("FREI")) && (histCurrObst.equals("FREI"))){
 				myConnection.getUSB().process("set speed 0 0");
 			}
-			System.out.println(detResult);
-			
-			JsonArrayBuilder values = factory.createArrayBuilder();
 
-			result = factory.createArrayBuilder();
-			result.add(factory.createObjectBuilder().add("status", "ok").build());
-		
+			// build JSON string for infrared raw values
+
+			values = factory.createArrayBuilder();
+			
+			for (int i = 0; i < sensorRaw.size(); i++) {
+				JsonObject o = factory.createObjectBuilder().add("sensor_" + i, Short.toString(sensorRaw.get(i))).build();
+				values.add(o);
+			}
+			
+			result.add(factory.createObjectBuilder().add("sensor_raw", values.build()));
+			
 			// build JSON string for detected obstacles and it's classification
+			
+			values = factory.createArrayBuilder();
 			
 			for (int i = 0; i < probs.length; i++) {
 				JsonObject o = factory.createObjectBuilder().add("class_" + i, Double.toString(probs[i])).build();
@@ -80,12 +76,20 @@ public class ThymioMonitor extends Thread {
 			values = factory.createArrayBuilder();
 			values.add(factory.createObjectBuilder().add("pos_x", Double.toString(myThymio.getPosX())).build());
 			values.add(factory.createObjectBuilder().add("pos_y", Double.toString(myThymio.getPosY())).build());
-			
+			values.add(factory.createObjectBuilder().add("orientation", Double.toString(myThymio.getOrientation())).build());
+
 			result.add(factory.createObjectBuilder().add("position", values.build()));
-			
-			myConnection.sendMessage(factory.createObjectBuilder().add("values", result).build().toString());
-			
+
 			try {
+				synchronized (myConnection) {
+					while (myConnection.isConnected()) { //FEHLER???
+						System.out.println(this.getClass().getName() + ": waiting for TCP Connection");
+						wait();
+					}
+				}
+
+				myConnection.sendMessage(factory.createObjectBuilder().add("values", result).build().toString());
+
 				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
