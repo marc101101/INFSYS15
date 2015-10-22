@@ -19,17 +19,12 @@ public class PosDetermination {
 		this.probPos = probPos;
 		rulesArray = new ArrayList<Rule>();
 		wm = new WorkingMemory();
-		String timeStamp = new SimpleDateFormat("SSSSSSSS").format(System.currentTimeMillis());
-		try {
-			writer = new FileWriter("/home/pi/evalRules" + timeStamp + ".csv");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		
 		setRules();
 	}
 
 	/**
-	 * 	Erstellt alle möglichen vorstellbaren Regeln 6 x 6 x 5 = 180 Regelsätze
+	 * 	Erstellt alle möglichen vorstellbaren Regeln 5 x 5 x 5 = 151 Regelsätze
 	 *  und fügt diese in das rulesArray ein
 	 */
 	private void setRules() { 
@@ -44,7 +39,7 @@ public class PosDetermination {
 					}
 				}
 			}
-		}
+		}	
 	}
 
 	/**
@@ -61,8 +56,6 @@ public class PosDetermination {
 		wm.setLastObst(wm.getCurrObst());
 		wm.setCurrObst(getValues(probs));
 		
-		printRules();
-		
 		evaluateRule();
 		
 		int bestRule = checkRules();
@@ -74,21 +67,6 @@ public class PosDetermination {
 		else{
 			wm.setAction(-1);
 			preRuleFired = -1;
-		}
-	}
-	
-	public void printRules(){
-		try {
-			writer.append("EMPTY LINE");
-			int index = 0;
-			for(Rule rule : rulesArray){
-				writer.append("RULE " + index + " :" + rule.lastObst + "," + rule.currObst + "," + rule.getWeight());
-				index++;
-			}
-			writer.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -169,6 +147,14 @@ public class PosDetermination {
 		return wm.getActionString();
 	}
 	
+	public String getCurrObsWM(){
+		return wm.getCurrObstString();
+	}
+	
+	public String getLastObsWM(){
+		return wm.getLastObstString();
+	}
+	
 	/**
 	 * 	Gibt den Index und somit das Objekt aus dem probs Array zurück, das die höchste Wahrscheinlichkeit
 	 *  besitzt.
@@ -182,7 +168,6 @@ public class PosDetermination {
 				index = i;
 			}
 		}
-		System.out.println("HighestValue: " + index+1);
 		return index+1;
 	}
 

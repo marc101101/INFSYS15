@@ -75,6 +75,7 @@ public class ThymioInterface {
 			position = data.getJsonObject(2).getJsonArray("position");
 			
 			if(position.getJsonObject(0) != null){
+				System.out.print("POSX" + position.getJsonObject(1));
 				window.updatePosition(
 						Double.parseDouble(position.getJsonObject(0).getString("pos_x")),
 						Double.parseDouble(position.getJsonObject(1).getString("pos_y")));
