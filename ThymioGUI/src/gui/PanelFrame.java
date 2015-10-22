@@ -3,6 +3,7 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -22,7 +24,8 @@ public class PanelFrame extends JFrame implements ActionListener {
 	private ThymioInterface iface;
 	private Container pane;
 	private JTextArea console;
-	private JPanel controlbar, buttons;
+	private JPanel bottom, controlbar, buttons;
+	private JLabel sign;
 	private MapPanel mp;
 	private JButton fwButton, bwButton, leftButton, rightButton, stopButton;
 	
@@ -59,6 +62,9 @@ public class PanelFrame extends JFrame implements ActionListener {
 	 * Adds the different buttons in a new layout
 	 */
 	private void initControls(){
+		bottom = new JPanel();
+		bottom.setBackground(Color.LIGHT_GRAY);
+		bottom.setLayout(new BorderLayout(10, 10));
 		controlbar = new JPanel();
 		controlbar.setBackground(Color.LIGHT_GRAY);
 		
@@ -71,7 +77,11 @@ public class PanelFrame extends JFrame implements ActionListener {
 		buttons.add(rightButton = new JButton(new ImageIcon("resources/button_right.png")), BorderLayout.LINE_END);
 		buttons.add(stopButton = new JButton(new ImageIcon("resources/button_stop.png")), BorderLayout.CENTER);
 		controlbar.add(buttons);
-		pane.add(controlbar, BorderLayout.PAGE_END);
+		
+		sign = new JLabel();
+		bottom.add(controlbar, BorderLayout.WEST);
+		bottom.add(sign, BorderLayout.EAST);
+		pane.add(bottom, BorderLayout.PAGE_END);
 	}
 	
 	/**
@@ -117,7 +127,6 @@ public class PanelFrame extends JFrame implements ActionListener {
 	 * Updates the position of the Thymio on the map
 	 */
 	public void updatePosition(double posXmm, double posYmm) {
-		//myMapDisplay.setPose(posXmm/10, posYmm/10, theta);
 		mp.setPose(posXmm/10, posYmm/10, iface.getTheta());
 	}
 
@@ -134,6 +143,14 @@ public class PanelFrame extends JFrame implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		iface.performAction(e);		
+	}
+	
+	/**
+	 * Draws the sign of the obstacle in the bottom left corner
+	 * @param i - Icon to be drawn
+	 */
+	public void drawSign(ImageIcon i){
+		sign.setIcon(i);
 	}
 	
 }
