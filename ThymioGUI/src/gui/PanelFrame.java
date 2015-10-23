@@ -126,8 +126,8 @@ public class PanelFrame extends JFrame implements ActionListener {
 	/**
 	 * Updates the position of the Thymio on the map
 	 */
-	public void updatePosition(double posXmm, double posYmm) {
-		mp.setPose(posXmm/10, posYmm/10, iface.getTheta());
+	public void updatePosition(double posXmm, double posYmm, double theta) {
+		mp.setPose(posXmm/10, posYmm/10, theta);
 	}
 
 	/**

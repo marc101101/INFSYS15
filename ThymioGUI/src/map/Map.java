@@ -22,6 +22,8 @@ public class Map {
 		edgelength = l;
 		sizeX = x;
 		sizeY = y;
+		thymioX = 0;
+		thymioY = 0;
 		
 		element = new MapElement[sizeX][sizeY];
 		
@@ -35,8 +37,16 @@ public class Map {
 	public void setPose(double y, double x, double theta) {
 		posX = x;
 		thymioX = (int) (x/16D);
+		if(thymioX < 0){
+			thymioX = thymioX*(-1);
+		}
 		posY = y;
 		thymioY = (int) (y/16D);
+		if(thymioY < 0){
+			thymioY = thymioY*(-1);
+		}
+		
+		System.out.println("X: " + thymioX + "Y:" + thymioY);
 		thymioTheta = theta;
 	}
 	
@@ -84,20 +94,20 @@ public class Map {
 		
 		// collect N distinct random numbers between 0 and the max number of MapElements in this Map
 		
-		while (occupiedElements.size() < N) {
-			Integer pos = new Integer(r.nextInt(sizeX*sizeY));
-			if (!occupiedElements.contains(pos)) occupiedElements.add(pos);
-		}
-		
-		// find MapElement corresponding to each of the numbers and set its state to occupied
-		
-		for (int i = 0; i < N; i ++) {
-			Integer pos = occupiedElements.get(i);
-			int x = pos / sizeY;  // integer division by number of columns
-			int y = pos % sizeX;  // rest of integer division by number of rows
-			
-			element[x][y].setOccupied();
-		}
+//		while (occupiedElements.size() < N) {
+//			Integer pos = new Integer(r.nextInt(sizeX*sizeY));
+//			if (!occupiedElements.contains(pos)) occupiedElements.add(pos);
+//		}
+//		
+//		// find MapElement corresponding to each of the numbers and set its state to occupied
+//		
+//		for (int i = 0; i < N; i ++) {
+//			Integer pos = occupiedElements.get(i);
+//			int x = pos / sizeY;  // integer division by number of columns
+//			int y = pos % sizeX;  // rest of integer division by number of rows
+//			
+//			element[x][y].setOccupied();
+//		}
 		
 	}
 	

@@ -24,7 +24,7 @@ public class MapPanel extends JPanel {
 	private static final int FREI = 5;
 		
 	//images
-	private Image[] thumbs;
+	private Image thumb;
 	private Image[] images;
 	
 	private static final long serialVersionUID = 1L;
@@ -58,17 +58,13 @@ public class MapPanel extends JPanel {
 	 */
 	private void loadImages(){		
 		images = new Image[6];
-		thumbs = new Image[6];
 		images[ECKE] = new ImageIcon("resources/ecke.png").getImage();
 		images[FREI] = new ImageIcon("resources/free.png").getImage();
 		images[FRONTAL] = new ImageIcon("resources/frontal.png").getImage();
 		images[KANTE] = new ImageIcon("resources/kante.png").getImage();
 		images[LINKS] = new ImageIcon("resources/left.png").getImage();
 		images[RECHTS] = new ImageIcon("resources/right.png").getImage();
-		
-		for(int i = 0; i < images.length; i++){
-			thumbs[i] = images[i].getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		}
+		thumb = new ImageIcon("resources/thymio.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
 	}
 	
 
@@ -85,7 +81,7 @@ public class MapPanel extends JPanel {
 		for(int y = 0; y < myMap.getSizeY(); y++){
 			for(int x = 0; x < myMap.getSizeX(); x++){
 				if(myMap.isOccupied(x, y)){
-					g.fillRect(x*LENGTHSCALE+1, this.getHeight() -((y+1)*LENGTHSCALE-2), LENGTHSCALE-3, LENGTHSCALE-3);
+					g.fillRect(x*LENGTHSCALE+1, ((y+1)*LENGTHSCALE-1), LENGTHSCALE-3, LENGTHSCALE-3);
 				}
 			}
 		}
@@ -95,7 +91,7 @@ public class MapPanel extends JPanel {
 	 * Draws the Thymio on the map, position was updated by ThymioEvent
 	 */
 	private void drawThymio(Graphics g){
-		g.drawImage(thumbs[obstacle], myMap.getThymioX()*LENGTHSCALE, this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
+		g.drawImage(thumb, myMap.getThymioX()*LENGTHSCALE, ((myMap.getThymioY()) * LENGTHSCALE), null);
 		pf.drawSign(new ImageIcon(images[obstacle]));
 	}
 
@@ -129,9 +125,10 @@ public class MapPanel extends JPanel {
 		*/
 		
 		g.setColor(Color.BLUE);
-		g.drawLine((int) ((myMap.getPosX() - 5.5 * Math.cos(angle)) / lengthX * LENGTHSCALE),
-				(int) (this.getHeight() - (myMap.getPosY() - 5.5 * Math.sin(angle)) / lengthX * LENGTHSCALE), (int) dx,
-				(int) dy);
+		g.drawLine((int)((myMap.getPosX() - 5.5*Math.cos(angle))/lengthX*LENGTHSCALE),
+			       (int)(this.getHeight() - (myMap.getPosY() - 5.5*Math.sin(angle))/lengthX*LENGTHSCALE),
+			       (int)dx,
+			       (int)dy);
 
 		g.setColor(Color.RED);
 

@@ -2,28 +2,30 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import javax.json.JsonArray;
+import javax.json.JsonObject;
+
 import map.Map;
 import javax.swing.JFrame;
 
 import client.ThymioConnector;
 
 public class ThymioInterface {
-	
+
 	private static final int FREI = 5;
 
-	//window dimensions
+	// window dimensions
 	private static final int WINDOW_WIDTH = 375;
 	private static final int WINDOW_HEIGHT = 768;
-	
+
 	private ThymioConnector myConnector;
 	private PanelFrame window;
 	private Map m;
 
-	public ThymioInterface(){
+	public ThymioInterface() {
 		initComponents();
 		initWindow();
-		
-		//waiting for Images to load
+
+		// waiting for Images to load
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -31,11 +33,12 @@ public class ThymioInterface {
 		}
 		window.repaint();
 	}
-	
+
 	/**
-	 * Inits the general window in which the UI will be displazed with basic parameters
+	 * Inits the general window in which the UI will be displazed with basic
+	 * parameters
 	 */
-	private void initWindow(){
+	private void initWindow() {
 		window = new PanelFrame(this);
 		window.setTitle("ThymioGUI");
 		window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -58,27 +61,41 @@ public class ThymioInterface {
 
 		status = data.getJsonObject(0).getString("status");
 		if (status.equals("ok")) {
-			obstacles = data.getJsonObject(1).getJsonArray("obstacles");
+			obstacles = data.getJsonObject(2).getJsonArray("obstacles");
 
-			//gets highest probability
+			// gets highest probability
 			bestProb = Double.MIN_VALUE;
 			for (int i = 0; i < 6; i++) {
-				double p = Double.parseDouble(obstacles.getJsonObject(i)
-						.getString("class_" + i));
-				
-				
+				double p = Double.parseDouble(obstacles.getJsonObject(i).getString("class_" + i));
+
 				if (p > bestProb) {
 					bestProb = p;
 					bestClass = i;
 				}
 			}
-			position = data.getJsonObject(2).getJsonArray("position");
+			position = data.getJsonObject(3).getJsonArray("position");
 			
-			if(position.getJsonObject(0) != null){
-				System.out.print("POSX" + position.getJsonObject(1));
-				window.updatePosition(
-						Double.parseDouble(position.getJsonObject(0).getString("pos_x")),
-						Double.parseDouble(position.getJsonObject(1).getString("pos_y")));
+
+			if (position.getJsonObject(0) != null) {
+				String x = position.getJsonObject(0).getString("pos_x");
+				String y = position.getJsonObject(1).getString("pos_y");
+				String theta = position.getJsonObject(2).getString("orientation");
+				
+				Double one = Double.parseDouble(x);
+				Double two = Double.parseDouble(y);
+				Double three = Double.parseDouble(theta);
+				if(window == null){
+					
+				
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}}
+
+				window.updatePosition(one, two, three);
+
 			}
 			window.updateObstacle(bestClass);
 			window.repaint();
@@ -88,36 +105,31 @@ public class ThymioInterface {
 	}
 
 	protected void performAction(ActionEvent e) {
-		 if (e.getSource() == window.getFwButton()) {
-			 window.appendLine("FORWARD!");
-			 myConnector.sendMessage("set speed 50 50");
-		 } 
-		 else if (e.getSource() == window.getBwButton()) {
-			 window.appendLine("BACKWARD!");
-			 myConnector.sendMessage("set speed -50 -50");
-		 } 
-		 else if (e.getSource() == window.getLeftButton()) {
-			 window.appendLine("LEFT!");
-			 myConnector.sendMessage("set speed -50 50");
-		 } 
-		 else if (e.getSource() == window.getRightButton()) {
-			 window.appendLine("RIGHT!");
-			 myConnector.sendMessage("set speed 50 -50");
-		 } 
-		 else if (e.getSource() == window.getStopButton()) {
-			 window.appendLine("STOP!");
-			 myConnector.sendMessage("set speed 0 0");
-		 } 
-		 else {
-			 return;
-		 }
+		if (e.getSource() == window.getFwButton()) {
+			window.appendLine("FORWARD!");
+			myConnector.sendMessage("set speed 100 100");
+		} else if (e.getSource() == window.getBwButton()) {
+			window.appendLine("BACKWARD!");
+			myConnector.sendMessage("set speed -50 -50");
+		} else if (e.getSource() == window.getLeftButton()) {
+			window.appendLine("LEFT!");
+			myConnector.sendMessage("set speed -50 50");
+		} else if (e.getSource() == window.getRightButton()) {
+			window.appendLine("RIGHT!");
+			myConnector.sendMessage("set speed 50 -50");
+		} else if (e.getSource() == window.getStopButton()) {
+			window.appendLine("STOP!");
+			myConnector.sendMessage("set speed 0 0");
+		} else {
+			return;
+		}
 	}
 
-	public Map getMap(){
+	public Map getMap() {
 		return m;
 	}
-	
-	public double getTheta(){
+
+	public double getTheta() {
 		return m.getThymioOrientation();
 	}
 }

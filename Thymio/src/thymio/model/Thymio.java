@@ -29,7 +29,17 @@ public class Thymio extends Thread {
 		stopped = false;
 		
 		myMap = new Map(10, 20, 17);
-
+		
+		/*
+		try {
+			logData = new PrintWriter(new FileWriter("./logdata.csv"));
+			logData.println("motor.left.speed\tmotor.right.speed\tdelta x observed\tdelta x computed\tdelta theta observed\tdelta theta computed\tpos X\tposY\tvertical 0\tvertical 1");
+			logData.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
 	}
 	
 	public short getVLeft() {

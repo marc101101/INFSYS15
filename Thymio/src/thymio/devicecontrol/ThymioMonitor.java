@@ -16,13 +16,13 @@ public class ThymioMonitor extends Thread {
 	private TCPConnection myConnection;
 	private Thymio myThymio;
 	private ObstacleClassifier myAlerter;
-	private PosDetermination posDet;
 	private double[] startProb = { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 };
+	private PosDetermination posDet;
 
 	public ThymioMonitor(TCPConnection c, Thymio t) {
 		myConnection = c;
 		myThymio = t;
-		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data_simple.arff");
+		myAlerter = new ObstacleClassifier("/home/pi/Thymio/data.arff");
 		posDet = new PosDetermination(startProb);
 	}
 	
@@ -34,10 +34,7 @@ public class ThymioMonitor extends Thread {
 			List<Short> sensorRaw = myThymio.getVariable("prox.horizontal");
 			double [] probs = myAlerter.classify(sensorRaw);
 			JsonArrayBuilder values;
-
-			result = factory.createArrayBuilder();
-			result.add(factory.createObjectBuilder().add("status", "ok").build());
-		
+			
 			posDet.updatePos(probs);
 			String detResult = posDet.getResult();
 			if(!detResult.equals("set speed 0 0")){
@@ -49,6 +46,9 @@ public class ThymioMonitor extends Thread {
 				myConnection.getUSB().process("set speed 0 0");
 			}
 
+			result = factory.createArrayBuilder();
+			result.add(factory.createObjectBuilder().add("status", "ok").build());
+		
 			// build JSON string for infrared raw values
 
 			values = factory.createArrayBuilder();
@@ -82,7 +82,7 @@ public class ThymioMonitor extends Thread {
 
 			try {
 				synchronized (myConnection) {
-					while (myConnection.isConnected()) { //FEHLER???
+					while (myConnection.isSending()) {
 						System.out.println(this.getClass().getName() + ": waiting for TCP Connection");
 						wait();
 					}
