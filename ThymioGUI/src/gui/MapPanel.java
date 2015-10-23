@@ -24,26 +24,29 @@ public class MapPanel extends JPanel {
 	private static final int FREI = 5;
 		
 	//images
+	private Image[] thumbs;
 	private Image[] images;
 	
 	private static final long serialVersionUID = 1L;
 	private Map myMap;
+	private PanelFrame pf;
 	public static final int LENGTHSCALE = 30;
 	private double lengthX;
 	private InfraRed myIRData;
 	private int obstacle;
 
-	public MapPanel(Map m, InfraRed ir, JFrame f) {
+	public MapPanel(Map m, InfraRed ir, PanelFrame pf) {
 		myMap = m;
 		myIRData = ir;
+		this.pf = pf;
 		lengthX = myMap.getEdgeLength();
 		
 		setPose(0, 0, 0);
 		
 		obstacle = FREI;
 
-		this.setPreferredSize(new Dimension(myMap.getSizeX() * LENGTHSCALE + (int) f.getBounds().getWidth(),
-				myMap.getSizeY() * LENGTHSCALE + (int) f.getBounds().getHeight()));
+		this.setPreferredSize(new Dimension(myMap.getSizeX() * LENGTHSCALE + (int) pf.getBounds().getWidth(),
+				myMap.getSizeY() * LENGTHSCALE + (int) pf.getBounds().getHeight()));
 		this.setMaximumSize(new Dimension(myMap.getSizeX() * LENGTHSCALE, myMap.getSizeY() * LENGTHSCALE));
 		this.setMinimumSize(new Dimension(myMap.getSizeX() * LENGTHSCALE, myMap.getSizeY() * LENGTHSCALE));		
 		
@@ -53,14 +56,19 @@ public class MapPanel extends JPanel {
 	/**
 	 * Places all images for representation the Thymio/current obstacle in an array for more convenient use
 	 */
-	private void loadImages(){
+	private void loadImages(){		
 		images = new Image[6];
-		images[ECKE] = new ImageIcon("resources/ecke.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		images[FREI] = new ImageIcon("resources/free.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		images[FRONTAL] = new ImageIcon("resources/frontal.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		images[KANTE] = new ImageIcon("resources/kante.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		images[LINKS] = new ImageIcon("resources/left.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
-		images[RECHTS] = new ImageIcon("resources/right.png").getImage().getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		thumbs = new Image[6];
+		images[ECKE] = new ImageIcon("resources/ecke.png").getImage();
+		images[FREI] = new ImageIcon("resources/free.png").getImage();
+		images[FRONTAL] = new ImageIcon("resources/frontal.png").getImage();
+		images[KANTE] = new ImageIcon("resources/kante.png").getImage();
+		images[LINKS] = new ImageIcon("resources/left.png").getImage();
+		images[RECHTS] = new ImageIcon("resources/right.png").getImage();
+		
+		for(int i = 0; i < images.length; i++){
+			thumbs[i] = images[i].getScaledInstance(LENGTHSCALE, LENGTHSCALE, 0);
+		}
 	}
 	
 
@@ -87,7 +95,8 @@ public class MapPanel extends JPanel {
 	 * Draws the Thymio on the map, position was updated by ThymioEvent
 	 */
 	private void drawThymio(Graphics g){
-		g.drawImage(images[obstacle], myMap.getThymioX()*LENGTHSCALE, this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
+		g.drawImage(thumbs[obstacle], myMap.getThymioX()*LENGTHSCALE, this.getHeight() - ((myMap.getThymioY()+1) * LENGTHSCALE), null);
+		pf.drawSign(new ImageIcon(images[obstacle]));
 	}
 
 	public void paint(Graphics g) {
