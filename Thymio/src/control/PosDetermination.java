@@ -28,6 +28,7 @@ public class PosDetermination {
 	 *  und fügt diese in das rulesArray ein
 	 */
 	private void setRules() { 
+		int index = 0;
 		Rule rule1 = new Rule (6,6,5);
 		rulesArray.add(rule1);
 		for(int stateOne : states){
@@ -36,10 +37,12 @@ public class PosDetermination {
 					if((stateOne != 6) && (stateTwo != 6)){
 						Rule rule = new Rule(stateOne,stateTwo,action);
 						rulesArray.add(rule);
+						System.out.println(rulesArray.size());
 					}
 				}
 			}
 		}	
+		System.out.print("LENGTH" + rulesArray.size());
 	}
 
 	/**
